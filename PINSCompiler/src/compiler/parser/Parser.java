@@ -128,22 +128,19 @@ public class Parser {
     }
 
     private void parseFunctionDefinition() {
-        if (check(KW_FUN)) {
+        dump("function_definition -> fun identifier ( parameters ) : type = expression");
+        if (check(IDENTIFIER)) {
             skip();
-            if (check(IDENTIFIER)) {
+            if (check(OP_LPARENT)) {
                 skip();
-                if (check(OP_LPARENT)) {
-                    dump("function_definition -> fun identifier ( parameters ) : type = expression");
+                parseParameters();
+                if (check(OP_RPARENT)) {
                     skip();
-                    parseParameters();
-                    if (check(OP_RPARENT)) {
-                        skip();
-                        if (check(OP_COLON)) {
-                            parseType();
-                            if (check(OP_EQ)) {
-                                skip();
-                                parseExpression();
-                            } else error();
+                    if (check(OP_COLON)) {
+                        parseType();
+                        if (check(OP_EQ)) {
+                            skip();
+                            parseExpression();
                         } else error();
                     } else error();
                 } else error();
@@ -152,7 +149,30 @@ public class Parser {
     }
 
     private void parseParameters() {
+        dump("parameters -> parameter parameters2");
+        parseParameter();
+        parseParameters2();
+    }
 
+    private void parseParameter() {
+        if (check(IDENTIFIER)) {
+            skip();
+            if (check(OP_COLON)) {
+                dump("parameter -> identifier : type");
+                skip();
+                parseType();
+            } else error();
+        } else error();
+    }
+
+    private void parseParameters2() {
+        if (check(OP_COLON)) {
+            skip();
+            dump("parameters2 -> : parameters");
+            parseParameters();
+        } else {
+            dump("parameters2 -> e");
+        }
     }
 
     private void parseExpression() {
@@ -178,6 +198,7 @@ public class Parser {
     private void error() {
         Report.error("Error");
     }
+
     private void skip() {
         pointer++;
     }
