@@ -8,9 +8,8 @@ package compiler.lexer;
 import static common.RequireNonNull.requireNonNull;
 
 public class Symbol {
-    /* nasa naloga  da ko ustvaris token mu nastavis pravi tip simbola*/
     /**
-     * Obmoje simbola znotraj izvorne datoteke.
+     * Območje simbola znotraj izvorne datoteke.
      */
     public final Position position;
 
@@ -27,7 +26,7 @@ public class Symbol {
     /**
      * Ustvari nov leksikalni simbol.
      * 
-     * @param position Obmoje, ki ga simbol zajema v izvorni datoteki.
+     * @param position Območje, ki ga simbol zajema v izvorni datoteki.
      * @param tokenType Vrsta simbola.
      * @param lexeme Znakovna predstavitev simbola.
      */
@@ -41,8 +40,8 @@ public class Symbol {
     /**
      * Ustvari nov leksikalni simbol.
      * 
-     * @param startLocation Zaetna lokacija obmoja, ki ga simbol zajema v izvorni datoteki.
-     * @param endLocation Konna lokacija obmoja, ki ga simbol zajema v izvorni datoteki.
+     * @param startLocation Začetna lokacija območja, ki ga simbol zajema v izvorni datoteki.
+     * @param endLocation Končna lokacija območja, ki ga simbol zajema v izvorni datoteki.
      * @param tokenType Vrsta simbola.
      * @param lexeme Znakovna predstavitev simbola.
      */

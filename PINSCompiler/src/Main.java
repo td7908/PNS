@@ -4,12 +4,15 @@
  */
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import cli.PINS;
 import cli.PINS.Phase;
 import compiler.lexer.Lexer;
+import compiler.parser.Parser;
 
 public class Main {
     /**
@@ -18,13 +21,8 @@ public class Main {
      * @param args parametri ukazne vrstice.
      */
     public static void main(String[] args) throws Exception {
-        try {
-            args = new String[]{"PINS", "src/source.txt", "--dump", "LEX"};
-            var cli = PINS.parse(args);
-            run(cli);
-        } catch (Exception e) {
-            System.err.println(e.toString());
-        }
+        var cli = PINS.parse(args);
+        run(cli);
     }
 
 
@@ -47,6 +45,17 @@ public class Main {
             }
         }
         if (cli.execPhase == Phase.LEX) {
+            return;
+        }
+        /**
+         * Izvedi sintaksno analizo.
+         */
+        Optional<PrintStream> out = cli.dumpPhases.contains(Phase.SYN) 
+                ? Optional.of(System.out)
+                : Optional.empty();
+        var parser = new Parser(symbols, out);
+        parser.parse();
+        if (cli.execPhase == Phase.SYN) {
             return;
         }
     }

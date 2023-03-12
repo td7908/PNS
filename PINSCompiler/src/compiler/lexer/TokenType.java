@@ -77,4 +77,3 @@ public enum TokenType {
     OP_COMMA,     // ,
     OP_ASSIGN     // =
 }
-
