@@ -22,6 +22,7 @@ public class Parser {
      * Seznam leksikalnih simbolov.
      */
     private final List<Symbol> symbols;
+    private int pointer;
 
     /**
      * Ciljni tok, kamor izpisujemo produkcije. Če produkcij ne želimo izpisovati,
@@ -43,8 +44,9 @@ public class Parser {
     }
 
     private void parseSource() {
-        // TODO: - rekurzivno spuščanje
+
     }
+
 
     /**
      * Izpiše produkcijo na izhodni tok.
@@ -53,5 +55,16 @@ public class Parser {
         if (productionsOutputStream.isPresent()) {
             productionsOutputStream.get().println(production);
         }
+    }
+
+    private boolean check(TokenType typeToCheck) {
+        if (pointer < symbols.size()) {
+            return symbols.get(pointer).tokenType == typeToCheck;
+        }
+        return false;
+    }
+
+    private void skip() {
+        pointer++;
     }
 }
