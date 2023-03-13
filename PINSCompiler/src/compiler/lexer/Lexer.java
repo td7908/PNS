@@ -85,6 +85,8 @@ public class Lexer {
         StringBuilder lexem;
 
         char[] characters = this.source.toCharArray();
+//        characters = new char[]{9, 39, 'd', 'a', 'n', 'e', 's', ' ', 'j', 'e', ' ', 39, 39, 'l', 'e', 'p', 39, 39, ' ', 'd', 'a', 'n', 39};
+//        characters = new char[]{'t', 'r', 'u', 'e', 10, 10, ' ', ' ', '<', '=', '&', 10, 9, 10, 9, ' ', 'f', 'a', 'l', 's', 'e'};
         for (int i = 0; i < characters.length; i++) {
             endColumn = startColumn;
             lexem = new StringBuilder();
@@ -226,7 +228,7 @@ public class Lexer {
                     i--;
                     startColumn -= 4;
                 }
-                startColumn++;
+                startColumn += 4;
             } else if (characters[i] == 10 || characters[i] == 13) {
                 // '\n'
                 addingSymbolNecessity = false;
@@ -236,7 +238,7 @@ public class Lexer {
             } else if (characters[i] == 39) {
                 // ' -> STRING
                 tokenType = C_STRING;
-                lexem = new StringBuilder("'");
+                lexem = new StringBuilder("");
                 boolean isEscaped = false;
                 i++;
                 endColumn++;
@@ -248,7 +250,6 @@ public class Lexer {
                             lexem.append("'");
                         } else {
                             isEscaped = true;
-                            lexem.append("'");
                         }
                     } else {
                         lexem.append(characters[i]);
@@ -264,16 +265,16 @@ public class Lexer {
                 if (!isEscaped) {
                     Report.error(new Position(line, startColumn, line, endColumn), "String is not escaped");
                 }
-            } else if ((characters[i] >= 65 && characters[i] <= 90) || (characters[i] >= 97 && characters[i] <= 120) || characters[i] == '_') {
+            } else if ((characters[i] >= 65 && characters[i] <= 90) || (characters[i] >= 97 && characters[i] <= 122) || characters[i] == '_') {
                 lexem = new StringBuilder();
-                while (i < characters.length && ((characters[i] >= 65 && characters[i] <= 90) || (characters[i] >= 97 && characters[i] <= 120) || characters[i] == '_' || Character.isDigit(characters[i]))) {
+                while (i < characters.length && ((characters[i] >= 65 && characters[i] <= 90) || (characters[i] >= 97 && characters[i] <= 122) || characters[i] == '_' || Character.isDigit(characters[i]))) {
                     lexem.append(characters[i]);
                     i++;
                     endColumn++;
                 }
                 i--;
                 endColumn--;
-                if (!((characters[i] >= 65 && characters[i] <= 90) || (characters[i] >= 97 && characters[i] <= 120) || characters[i] == '_')) {
+                if (!((characters[i] >= 65 && characters[i] <= 90) || (characters[i] >= 97 && characters[i] <= 122) || characters[i] == '_')) {
                     Report.error(new Position(line, endColumn, line, endColumn), "Unknown Character: " + characters[i]);
                 }
                 if (keywordMapping.containsKey(lexem.toString())) {
@@ -287,7 +288,7 @@ public class Lexer {
                 Report.error(new Position(line, endColumn, line, endColumn), "Unknown Character: " + characters[i]);
             }
             if (addingSymbolNecessity) {
-                symbols.add(createSymbol(line, startColumn, endColumn, tokenType, lexem.toString()));
+                symbols.add(createSymbol(line, startColumn, endColumn + 1, tokenType, lexem.toString()));
                 startColumn = endColumn + 1;
             }
         }

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 import common.Report;
-import compiler.lexer.Position;
 import compiler.lexer.Symbol;
 import compiler.lexer.TokenType;
 
@@ -22,7 +21,7 @@ public class Parser {
      * Seznam leksikalnih simbolov.
      */
     private final List<Symbol> symbols;
-    private int pointer;
+    private int pointer = -1;
 
     /**
      * Ciljni tok, kamor izpisujemo produkcije. Če produkcij ne želimo izpisovati,
@@ -41,10 +40,14 @@ public class Parser {
      */
     public void parse() {
         parseSource();
+        if (!check(EOF)) {
+            error();
+        }
     }
 
     private void parseSource() {
         dump("source -> definitions");
+        parseDefinitions();
     }
 
     private void parseDefinitions() {
@@ -56,6 +59,7 @@ public class Parser {
     private void parseDefinitions2() {
         if (check(OP_SEMICOLON)) {
             dump("definitions2 -> ; definitions");
+            skip();
             parseDefinitions();
         } else {
             dump("definitions2 -> e");
@@ -79,7 +83,7 @@ public class Parser {
     }
 
     private void parseTypeDefinition() {
-        dump("type_definition -> typ identifier : type");
+            dump("type_definition -> typ identifier : type");
         if (check(IDENTIFIER)) {
             skip();
             if (check(OP_COLON)) {
@@ -90,6 +94,10 @@ public class Parser {
     }
 
     private void parseType() {
+        if (check(IDENTIFIER)) {
+            dump("type -> identifier");
+            skip();
+        }
         if (check(AT_LOGICAL)) {
             dump("type -> logical");
             skip();
@@ -106,6 +114,7 @@ public class Parser {
                     skip();
                     if (check(OP_RBRACKET)) {
                         dump("type -> arr [ int_const ] type");
+                        skip();
                         parseType();
                     } else error();
                 } else error();
@@ -114,15 +123,12 @@ public class Parser {
     }
 
     private void parseVariableDefinition() {
-        if (check(KW_VAR)) {
+        if (check(IDENTIFIER)) {
             skip();
-            if (check(IDENTIFIER)) {
+            if (check(OP_COLON)) {
+                dump("variable_definition -> var identifier : type");
                 skip();
-                if (check(OP_COLON)) {
-                    dump("variable_definition -> var identifier : type");
-                    skip();
-                    parseType();
-                } else error();
+                parseType();
             } else error();
         } else error();
     }
@@ -137,6 +143,7 @@ public class Parser {
                 if (check(OP_RPARENT)) {
                     skip();
                     if (check(OP_COLON)) {
+                        skip();
                         parseType();
                         if (check(OP_ASSIGN)) {
                             skip();
@@ -183,15 +190,15 @@ public class Parser {
 
     private void parseExpression2() {
         if (check(OP_LBRACE)) {
-            dump("expression2 -> { where } definitions");
+            dump("expression2 -> { where definitions }");
             skip();
             if (check(KW_WHERE)) {
                 skip();
                 parseDefinitions();
                 if (check(OP_RBRACE)) {
                     skip();
-                }
-            }
+                } else error();
+            } else error();
         } else {
             dump("expression2 -> e");
         }
@@ -336,11 +343,12 @@ public class Parser {
 
     private void parsePostfixExpression2() {
         if (check(OP_LBRACKET)) {
-            dump("postfix_expression2 -> [ expression ]");
+            dump("postfix_expression2 -> [ expression ] postfix_expression2 ");
             skip();
             parseExpression();
             if (check(OP_RBRACKET)) {
                 skip();
+                parseAtomExpression2();
             } else error();
         } else {
             dump("postfix_expression2 -> e");
@@ -372,9 +380,6 @@ public class Parser {
             dump("atom_expression -> { atom_expression4");
             skip();
             parseAtomExpression4();
-            if (check(OP_RBRACE)) {
-                skip();
-            } else error();
         } else error();
     }
 
