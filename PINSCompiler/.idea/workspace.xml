@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b7b1f80-25c7-4128-b9d7-99da7bc71d83" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/lexer/Lexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/lexer/Lexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/parser/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/source.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/source.txt" afterDir="false" />
-    </list>
+    <list default="true" id="1b7b1f80-25c7-4128-b9d7-99da7bc71d83" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
