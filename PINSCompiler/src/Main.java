@@ -21,6 +21,7 @@ public class Main {
      * @param args parametri ukazne vrstice.
      */
     public static void main(String[] args) throws Exception {
+//        args = new String[]{"PINS", "src/source.txt", "--dump", "LEX"};
         var cli = PINS.parse(args);
         run(cli);
     }
